@@ -52,8 +52,19 @@ $harvest-yellow: rgb(241, 185, 26)
       fill: rgb(0, 186, 124) !important
     +archived
 
+$folder-b-blue: rgb(29, 161, 242)
+
 .harvester-folder-b
   margin-left: 2px !important
+  &:hover, &:hover:active
+    svg
+      fill: $folder-b-blue !important
+  &:hover
+    .statusBG, .streamBG
+      background: rgba(29, 161, 242, 0.1) !important
+  &:hover:active
+    .statusBG, .streamBG
+      background: rgba(29, 161, 242, 0.2) !important
 
 .harvester
   display: flex

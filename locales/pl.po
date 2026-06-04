@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: twitter-media-harvest (4.5.4)\n"
-"POT-Creation-Date: 2026-05-21 14:59+0800\n"
+"Project-Id-Version: twitter-media-harvest (4.5.4.3)\n"
+"POT-Creation-Date: 2026-06-04 22:57+0800\n"
 "PO-Revision-Date: 2026-03-07 00:00+0000\n"
 "Last-Translator: Media Harvest Team\n"
 "Language-Team: Polish\n"
@@ -337,27 +337,43 @@ msgctxt "options:general"
 msgid "Filename pattern"
 msgstr "Wzorzec nazwy pliku"
 
-#: src/pages/components/GeneralOptions.tsx:317
+#: src/pages/components/GeneralOptions.tsx:316
+msgctxt "options:general"
+msgid "Folder B (optional)"
+msgstr "Folder B (optional)"
+
+#: src/pages/components/GeneralOptions.tsx:364
 msgctxt "options:general"
 msgid "Group Files"
 msgstr "Grupuj pliki"
 
-#: src/pages/components/GeneralOptions.tsx:318
+#: src/pages/components/GeneralOptions.tsx:365
 msgctxt "options:general"
 msgid "Group files by the selected attribute."
 msgstr "Grupuj pliki według wybranego atrybutu."
 
-#: src/pages/hooks/useFilenameSettingsForm.ts:246
+#: src/pages/components/GeneralOptions.tsx:325
+#: src/pages/hooks/useFilenameSettingsForm.ts:272
 msgctxt "options:general"
 msgid "Invalid directory name. Cannot contain <>:\"\\|?*"
 msgstr "Nieprawidłowa nazwa katalogu. Nie może zawierać <>:\"\\|?*"
 
-#: src/pages/hooks/useFilenameSettingsForm.ts:287
+#: src/pages/hooks/useFilenameSettingsForm.ts:333
 msgctxt "options:general"
 msgid "Invalid pattern. The pattern must include `Tweet ID` + `Serial` or `Hash`."
 msgstr ""
 "Nieprawidłowy wzorzec. Wzorzec musi zawierać `Tweet ID` + `Serial` lub "
 "`Hash`."
+
+#: src/pages/components/GeneralOptions.tsx:337
+msgctxt "options:general"
+msgid "Leave empty to use Folder A"
+msgstr "Leave empty to use Folder A"
+
+#: src/pages/components/GeneralOptions.tsx:317
+msgctxt "options:general"
+msgid "Second download folder for button B. Leave empty to fall back to Folder A."
+msgstr "Second download folder for button B. Leave empty to fall back to Folder A."
 
 #: src/pages/components/GeneralOptions.tsx:228
 msgctxt "options:general"
@@ -373,17 +389,17 @@ msgctxt "options:general"
 msgid "You can choose what info to be included in the filename."
 msgstr "Możesz wybrać, jakie informacje zostaną uwzględnione w nazwie pliku."
 
-#: src/pages/components/GeneralOptions.tsx:401
+#: src/pages/components/GeneralOptions.tsx:454
 msgctxt "options:general:button"
 msgid "Reset"
 msgstr "Resetuj"
 
-#: src/pages/components/GeneralOptions.tsx:409
+#: src/pages/components/GeneralOptions.tsx:462
 msgctxt "options:general:button"
 msgid "Save"
 msgstr "Zapisz"
 
-#: src/pages/components/GeneralOptions.tsx:326
+#: src/pages/components/GeneralOptions.tsx:373
 #: src/pages/components/GeneralOptions.tsx:55
 msgctxt "options:general:filenameToken"
 msgid "Account"
