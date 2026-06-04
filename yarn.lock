@@ -9342,6 +9342,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gifenc@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "gifenc@npm:1.0.3"
+  checksum: 10c0/34fc6b2c66c305fc556cd2f475154ce2ad68384a52ceb8253b901c8c7d9c63f2c0a5d109ceb3cb46e44c2c6155009920a286cf08a621105863aa43468e345229
+  languageName: node
+  linkType: hard
+
 "glob-parent@npm:^5.1.2, glob-parent@npm:~5.1.2":
   version: 5.1.2
   resolution: "glob-parent@npm:5.1.2"
@@ -11661,6 +11668,13 @@ __metadata:
   version: 12.36.0
   resolution: "motion-utils@npm:12.36.0"
   checksum: 10c0/fe08231759064eef5d351a869379246f1e1b2031bda357a6197d2a99ff6b472bce69f8250212713d8bff2ff46978f354ca8c3b8c8f0c5bd337d26a6793ba42fa
+  languageName: node
+  linkType: hard
+
+"mp4box@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "mp4box@npm:2.3.0"
+  checksum: 10c0/f561f9d0a9bc00c986bcc2b8015eea01c6328db083d919fc0a9d92d7a691eebde904ee6f89b07cf2e7247bc2c3c36ea3184651cd8db73fa84ac577963f2a9bc4
   languageName: node
   linkType: hard
 
@@ -14432,6 +14446,7 @@ __metadata:
     framer-motion: "npm:^12.38.0"
     gettext-extractor: "npm:^4.0.6"
     gettext-parser: "npm:^9.0.2"
+    gifenc: "npm:^1.0.3"
     glob: "npm:^13.0.6"
     globals: "npm:^17.4.0"
     husky: "npm:^9.1.7"
@@ -14446,6 +14461,7 @@ __metadata:
     keep-a-changelog: "npm:^2.8.0"
     lint-staged: "npm:^16.4.0"
     mini-css-extract-plugin: "npm:^2.10.2"
+    mp4box: "npm:^2.3.0"
     path-browserify: "npm:^1.0.1"
     pinst: "npm:^3.0.0"
     playwright-bdd: "npm:^8.5.0"

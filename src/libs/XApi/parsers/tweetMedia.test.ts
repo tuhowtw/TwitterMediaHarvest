@@ -1,5 +1,32 @@
 import { parseMedias } from './tweetMedia'
 
+describe('parseMedias animated_gif handling', () => {
+  it('preserves animated_gif type in parsed videos', () => {
+    const medias = [
+      {
+        type: 'animated_gif',
+        media_url_https: 'https://pbs.twimg.com/tweet_video_thumb/hash.jpg',
+        video_info: {
+          variants: [
+            {
+              bitrate: 0,
+              content_type: 'video/mp4',
+              url: 'https://video.twimg.com/tweet_video/hash.mp4',
+            },
+          ],
+        },
+      },
+    ] satisfies XApi.Media[]
+
+    const result = parseMedias(medias)
+
+    expect(result.videos).toHaveLength(1)
+    expect(result.videos[0].mapBy(p => p.type)).toBe('animated_gif')
+    expect(result.videos[0].isGif).toBe(true)
+    expect(result.videos[0].isVideo).toBe(true)
+  })
+})
+
 describe('parseMedias availability parsing', () => {
   it('marks media unavailable when ext_media_availability.status === "Unavailable"', () => {
     const medias = [

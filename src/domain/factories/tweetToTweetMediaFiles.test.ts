@@ -164,4 +164,40 @@ describe('unit test for tweet to tweet media files factory', () => {
 
     expect(tweetMediaFiles).toStrictEqual(expectedFiles)
   })
+
+  it('sets ext to .gif for animated_gif media', () => {
+    const tweetUser = generateTweetUser()
+    const tweet = new Tweet({
+      id: '1145141919810',
+      user: tweetUser,
+      createdAt: new Date(2222, 2, 2),
+      hashtags: [],
+      images: [
+        new TweetMedia({
+          index: 0,
+          type: 'thumbnail',
+          url: 'https://video.twimg.com/tweet_video_thumb/hash.jpg',
+        }),
+      ],
+      videos: [
+        new TweetMedia({
+          index: 0,
+          type: 'animated_gif',
+          url: 'https://video.twimg.com/tweet_video/hash.mp4',
+        }),
+      ],
+    })
+
+    const mediaFiles = tweetToTweetMediaFiles(tweet)
+    const gifFile = mediaFiles.find(
+      f => f.mapBy(props => props.type) === 'animated_gif'
+    )
+
+    expect(gifFile).toBeDefined()
+    expect(gifFile!.mapBy(props => props.ext)).toBe('.gif')
+    expect(gifFile!.isGif).toBe(true)
+    expect(gifFile!.mapBy(props => props.source)).toBe(
+      'https://video.twimg.com/tweet_video/hash.mp4'
+    )
+  })
 })

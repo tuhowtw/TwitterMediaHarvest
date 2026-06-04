@@ -37,9 +37,9 @@ import { DownloadTarget } from '#domain/valueObjects/downloadTarget'
 import type { FilenameSetting } from '#domain/valueObjects/filenameSetting'
 import { Tweet } from '#domain/valueObjects/tweet'
 import type { TweetInfo } from '#domain/valueObjects/tweetInfo'
-import type { TweetMediaFile } from '#domain/valueObjects/tweetMediaFile'
 import { TweetWithContent } from '#domain/valueObjects/tweetWithContent'
 import { setDuration } from '#helpers/time'
+import { transcodeMp4ToGif } from '#infra/useCases/transcodeMp4ToGif'
 import type { DownloadSettings, FeatureSettings } from '#schema'
 import { isErrorResult, isSuccessResult } from '#utils/result'
 import { metrics } from '@sentry/browser'
@@ -137,11 +137,16 @@ export class DownloadTweetMedia implements AsyncUseCase<
     await this.saveDownloadHistory(tweetToDownloadHistory(tweet))
 
     const downloader = await this.buildDownloader(tweetInfo)
-    const downloadCommands = await this.createDownloadCommands(tweet)
+    const { commands, blobUrls } = await this.createDownloadCommands(tweet)
 
     await Promise.allSettled(
-      downloadCommands.map(command => downloader.process(command))
+      commands.map(command => downloader.process(command))
     )
+
+    // Revoke any object URLs created for transcoded GIF blobs
+    for (const url of blobUrls) {
+      URL.revokeObjectURL(url)
+    }
 
     await this.infra.eventPublisher.publishAll(...downloader.events)
     if (__METRICS__)
@@ -156,14 +161,44 @@ export class DownloadTweetMedia implements AsyncUseCase<
     return downloader.isOk
   }
 
-  private async createDownloadCommands(tweet: Tweet) {
+  private async createDownloadCommands(
+    tweet: Tweet
+  ): Promise<{ commands: DownloadMediaFileCommand[]; blobUrls: string[] }> {
     const filenameSetting = await this.infra.filenameSettingRepo.get()
     const { includeVideoThumbnail } = await this.infra.featureSettingsRepo.get()
+    const blobUrls: string[] = []
 
-    return tweetToAvailableTweetMediaFiles(tweet)
-      .filter(mediaFile => includeVideoThumbnail || !mediaFile.isThumbnail)
-      .map(tweetMediaFileToDownloadTargetWithFilenameSettting(filenameSetting))
-      .map(downloadTargetToDownloadCommand)
+    const mediaFiles = tweetToAvailableTweetMediaFiles(tweet).filter(
+      mediaFile => includeVideoThumbnail || !mediaFile.isThumbnail
+    )
+
+    const commands: DownloadMediaFileCommand[] = await Promise.all(
+      mediaFiles.map(async mediaFile => {
+        const filename = filenameSetting.makeFilename(mediaFile)
+        const sourceUrl = mediaFile.mapBy(props => props.source)
+
+        if (mediaFile.isGif) {
+          try {
+            const gifBlob = await transcodeMp4ToGif(sourceUrl)
+            const blobUrl = URL.createObjectURL(gifBlob)
+            blobUrls.push(blobUrl)
+            return downloadTargetToDownloadCommand(
+              new DownloadTarget({ url: blobUrl, filename })
+            )
+          } catch (e) {
+            // Fall back to downloading the original mp4 with .gif extension
+            // eslint-disable-next-line no-console
+            console.warn('GIF transcode failed, falling back to mp4:', e)
+          }
+        }
+
+        return downloadTargetToDownloadCommand(
+          new DownloadTarget({ url: sourceUrl, filename })
+        )
+      })
+    )
+
+    return { commands, blobUrls }
   }
 
   private async failDownload(
@@ -235,14 +270,6 @@ export class DownloadTweetMedia implements AsyncUseCase<
     if (__DEV__) console.debug('Solution stats\n', JSON.stringify(statistics))
   }
 }
-
-const tweetMediaFileToDownloadTargetWithFilenameSettting =
-  (filenameSetting: FilenameSetting) =>
-  (mediaFile: TweetMediaFile): DownloadTarget =>
-    new DownloadTarget({
-      url: mediaFile.mapBy(props => props.source),
-      filename: filenameSetting.makeFilename(mediaFile),
-    })
 
 const downloadTargetToDownloadCommand = (
   target: DownloadTarget

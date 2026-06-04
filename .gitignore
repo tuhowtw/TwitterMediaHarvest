@@ -97,3 +97,4 @@ bdd-gen/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+desktop.ini
