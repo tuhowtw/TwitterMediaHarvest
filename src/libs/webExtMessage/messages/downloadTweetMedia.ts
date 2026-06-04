@@ -16,6 +16,8 @@ import Joi from 'joi'
 type DownloadTweetMediaMessagePayload = {
   tweetId: string
   screenName: string
+  /** Which folder button was clicked. 'a' = primary folder, 'b' = secondary. Defaults to 'a'. */
+  folder?: 'a' | 'b'
 }
 
 const payloadSchema: Joi.ObjectSchema<
@@ -28,6 +30,7 @@ const payloadSchema: Joi.ObjectSchema<
   payload: Joi.object<DownloadTweetMediaMessagePayload>({
     tweetId: Joi.string().required(),
     screenName: Joi.string().required(),
+    folder: Joi.valid('a', 'b').optional(),
   }).required(),
 })
 

@@ -55,6 +55,7 @@ const downloadMessageHandler = (
 
     const isOk = await downloadTweetMedia.process({
       tweetInfo: new TweetInfo(message.payload),
+      folder: message.payload.folder ?? 'a',
       xTransactionIdProvider:
         isSenderTab(ctx.sender) && isTabTransactionIdProvider(ctx.sender.tab)
           ? tabTransactionIdProvider(ctx.sender.tab.id)

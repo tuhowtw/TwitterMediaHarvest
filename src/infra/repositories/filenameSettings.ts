@@ -15,6 +15,7 @@ import type { V4FilenameSettings } from '#schema'
 
 const defaultV4FilenameSettings = new FilenameSetting({
   directory: isProduction ? 'twitter_media_harvest' : 'mh-dev',
+  directory2: '',
   noSubDirectory: false,
   filenamePattern: [
     PatternToken.Account,

@@ -38,6 +38,8 @@ type AggregationToken = '{account}'
 
 type V4FilenameSettings = {
   directory: string
+  /** Optional second download folder (Folder B). Empty string means unused. */
+  directory2: string
   noSubDirectory: boolean
   filenamePattern: PatternToken[]
   fileAggregation: boolean

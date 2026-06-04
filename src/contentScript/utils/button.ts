@@ -57,7 +57,11 @@ const buttonClickHandler = (e: MouseEvent) => {
     console.error(error)
     return setButtonStatus(ButtonStatus.Error)(button)
   }
-  const message = new DownloadTweetMediaMessage(value.mapBy(props => props))
+  const folder = button.dataset.folder === 'b' ? ('b' as const) : ('a' as const)
+  const message = new DownloadTweetMediaMessage({
+    ...value.mapBy(props => props),
+    folder,
+  })
   sendMessage(message).then(resp =>
     setButtonStatus(responseStatusToButtonStatus(resp.status))(button)
   )

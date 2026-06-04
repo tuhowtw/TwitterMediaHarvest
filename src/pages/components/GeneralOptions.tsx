@@ -304,6 +304,53 @@ const DirectoryControlFeature = (props: DirectoryControlFeatureProps) => (
   </RichFeatureSwitch>
 )
 
+interface Directory2ControlFeatureProps {
+  directory2: string
+  setDirectory2: (directory: string) => void
+  isValidDirectory2: boolean
+  isDataModified: boolean
+}
+
+const Directory2ControlFeature = (props: Directory2ControlFeatureProps) => (
+  <RichFeatureSwitch
+    name={i18n('Folder B (optional)', 'options:general')}
+    desc={i18n(
+      'Second download folder for button B. Leave empty to fall back to Folder A.',
+      'options:general'
+    )}
+    message={
+      !props.isValidDirectory2
+        ? {
+            type: 'error',
+            content: i18n(
+              'Invalid directory name. Cannot contain <>:"\\|?*',
+              'options:general'
+            ),
+          }
+        : undefined
+    }
+    cursor="default"
+    isOn={true}
+    testId="directory2-feature-switch"
+  >
+    <Input
+      placeholder={i18n('Leave empty to use Folder A', 'options:general')}
+      focusBorderColor={
+        props.isDataModified
+          ? props.isValidDirectory2
+            ? 'green.300'
+            : 'red.300'
+          : 'blue.300'
+      }
+      value={props.directory2}
+      onInput={e => props.setDirectory2(e.currentTarget.value)}
+      onChange={e => props.setDirectory2(e.currentTarget.value)}
+      isInvalid={!props.isValidDirectory2}
+      data-testid="directory2-input"
+    />
+  </RichFeatureSwitch>
+)
+
 interface FileAggregationFeatureProps extends Pick<
   RichFeatureSwithProps,
   'isOn' | 'handleClick'
@@ -384,6 +431,12 @@ const GeneralOptions = (props: GeneralOptionsProps) => {
             isDataModified={formStatus.dataIsChanged}
             isOn={!filenameSetting.mapBy(props => props.noSubDirectory)}
             handleClick={formHandler.toggleSubDirectory}
+          />
+          <Directory2ControlFeature
+            directory2={filenameSetting.mapBy(props => props.directory2 ?? '')}
+            setDirectory2={formHandler.setDirectory2}
+            isValidDirectory2={formStatus.directory2IsValid}
+            isDataModified={formStatus.dataIsChanged}
           />
           <FileAggregationFeature
             isDisabled={!filenameSetting.mapBy(props => props.fileAggregation)}

@@ -47,6 +47,8 @@ import { metrics } from '@sentry/browser'
 type DownloadTweetMediaCommand = {
   tweetInfo: TweetInfo
   xTransactionIdProvider?: TransactionIdProvider
+  /** Which folder button triggered this download. Defaults to 'a'. */
+  folder?: 'a' | 'b'
 }
 
 export type DownloaderBuilderMap = {
@@ -74,6 +76,7 @@ export class DownloadTweetMedia implements AsyncUseCase<
   async process({
     tweetInfo,
     xTransactionIdProvider,
+    folder = 'a',
   }: DownloadTweetMediaCommand): Promise<boolean> {
     if (__METRICS__) metrics.count('usecase.downloadTweetMedia.invoked', 1)
     const isSuccessDownloadFromCache = await this.downloadFromCache(tweetInfo)
@@ -109,7 +112,7 @@ export class DownloadTweetMedia implements AsyncUseCase<
 
     return isErrorResult(tweetResult)
       ? this.failDownload(tweetResult.error, tweetInfo)
-      : this.processDownload(tweetInfo, tweetResult.value)
+      : this.processDownload(tweetInfo, tweetResult.value, folder)
   }
 
   private async successDownloadFromCache(): Promise<boolean> {
@@ -133,11 +136,18 @@ export class DownloadTweetMedia implements AsyncUseCase<
     return this.processDownload(tweetInfo, tweetVo)
   }
 
-  private async processDownload(tweetInfo: TweetInfo, tweet: Tweet) {
+  private async processDownload(
+    tweetInfo: TweetInfo,
+    tweet: Tweet,
+    folder: 'a' | 'b' = 'a'
+  ) {
     await this.saveDownloadHistory(tweetToDownloadHistory(tweet))
 
     const downloader = await this.buildDownloader(tweetInfo)
-    const { commands, blobUrls } = await this.createDownloadCommands(tweet)
+    const { commands, blobUrls } = await this.createDownloadCommands(
+      tweet,
+      folder
+    )
 
     await Promise.allSettled(
       commands.map(command => downloader.process(command))
@@ -162,7 +172,8 @@ export class DownloadTweetMedia implements AsyncUseCase<
   }
 
   private async createDownloadCommands(
-    tweet: Tweet
+    tweet: Tweet,
+    folder: 'a' | 'b' = 'a'
   ): Promise<{ commands: DownloadMediaFileCommand[]; blobUrls: string[] }> {
     const filenameSetting = await this.infra.filenameSettingRepo.get()
     const { includeVideoThumbnail } = await this.infra.featureSettingsRepo.get()
@@ -174,7 +185,10 @@ export class DownloadTweetMedia implements AsyncUseCase<
 
     const commands: DownloadMediaFileCommand[] = await Promise.all(
       mediaFiles.map(async mediaFile => {
-        const filename = filenameSetting.makeFilename(mediaFile)
+        const filename = filenameSetting.makeFilenameForFolder(
+          folder,
+          mediaFile
+        )
         const sourceUrl = mediaFile.mapBy(props => props.source)
 
         if (mediaFile.isGif) {

@@ -16,6 +16,8 @@ export const enum AggregationToken {
 
 type FilenameSettingProps = {
   directory: string
+  /** Second download folder (Folder B). Empty string = fall back to directory. */
+  directory2?: string
   noSubDirectory: boolean
   filenamePattern: PatternToken[]
   fileAggregation: boolean
@@ -76,9 +78,26 @@ export class FilenameSetting extends ValueObject<FilenameSettingProps> {
     return undefined
   }
 
-  makeFilename(
+  /**
+   * Make filename using the folder selected by the user.
+   * Folder B falls back to folder A when `directory2` is empty.
+   */
+  makeFilenameForFolder(
+    folder: 'a' | 'b',
     mediaFile: TweetMediaFile,
     options?: MakeFilenameOptions
+  ): string {
+    const dirOverride =
+      folder === 'b' && this.props.directory2
+        ? this.props.directory2
+        : undefined
+    return this.makeFilename(mediaFile, options, dirOverride)
+  }
+
+  makeFilename(
+    mediaFile: TweetMediaFile,
+    options?: MakeFilenameOptions,
+    directoryOverride?: string
   ): string {
     const { screenName, id, createdAt, userId, hash, serial } = mediaFile.mapBy(
       props => ({
@@ -119,14 +138,19 @@ export class FilenameSetting extends ValueObject<FilenameSettingProps> {
     return path.format({
       dir: options?.noDir
         ? undefined
-        : this.makeAggregationDirectory(mediaFile),
+        : this.makeAggregationDirectory(mediaFile, directoryOverride),
       name: filename,
       ext: mediaFile.mapBy(props => props.ext),
     })
   }
 
-  makeAggregationDirectory(mediaFile: TweetMediaFile): string {
-    const baseDir = this.props.noSubDirectory ? '' : this.props.directory
+  makeAggregationDirectory(
+    mediaFile: TweetMediaFile,
+    directoryOverride?: string
+  ): string {
+    const baseDir = this.props.noSubDirectory
+      ? ''
+      : (directoryOverride ?? this.props.directory)
 
     if (!this.props.fileAggregation) return baseDir
 

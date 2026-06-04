@@ -18,6 +18,8 @@ import { useCallback, useEffect, useReducer, useState } from 'react'
 
 type DirectorySetAction = PayloadAction<'setDirectory', string>
 
+type Directory2SetAction = PayloadAction<'setDirectory2', string>
+
 type FilenamePatternSetAction = PayloadAction<
   'setFilenamePattern',
   PatternToken[]
@@ -37,12 +39,15 @@ type FilenameSettingsAction =
   | PayloadAction<'reset', FilenameSetting>
   | InitPayloadAction<FilenameSetting>
   | DirectorySetAction
+  | Directory2SetAction
   | FilenamePatternSetAction
   | AggregationTokenSetAction
 
 type FormStatusAction = PureAction<
   | 'directoryIsInvalid'
   | 'directoryIsValid'
+  | 'directory2IsInvalid'
+  | 'directory2IsValid'
   | 'filenamePatternIsInvalid'
   | 'filenamePatternIsValid'
   | 'formIsChanged'
@@ -53,6 +58,7 @@ type FormStatusAction = PureAction<
 type FormStatus = {
   dataIsChanged: boolean
   directoryIsValid: boolean
+  directory2IsValid: boolean
   filenamePatternIsValid: boolean
   isLoaded: boolean
 }
@@ -60,6 +66,7 @@ type FormStatus = {
 const defaultFormStatus: FormStatus = {
   dataIsChanged: false,
   directoryIsValid: true,
+  directory2IsValid: true,
   filenamePatternIsValid: true,
   isLoaded: false,
 }
@@ -79,6 +86,18 @@ function formStatusReducer(
       return {
         ...formStatus,
         directoryIsValid: true,
+      }
+
+    case 'directory2IsInvalid':
+      return {
+        ...formStatus,
+        directory2IsValid: false,
+      }
+
+    case 'directory2IsValid':
+      return {
+        ...formStatus,
+        directory2IsValid: true,
       }
 
     case 'filenamePatternIsInvalid':
@@ -134,6 +153,12 @@ function settingReducer(
     case 'setDirectory':
       return new FilenameSetting({ ...settingProps, directory: action.payload })
 
+    case 'setDirectory2':
+      return new FilenameSetting({
+        ...settingProps,
+        directory2: action.payload,
+      })
+
     case 'setFilenamePattern':
       return new FilenameSetting({
         ...settingProps,
@@ -165,6 +190,7 @@ type FormHandler = {
   submit: () => Promise<void>
   reset: () => void
   setDirectory: (directory: string) => void
+  setDirectory2: (directory: string) => void
   toggleSubDirectory: () => void
   changePatternTokenState: (
     state: PatternTokenState
@@ -250,6 +276,26 @@ const useFilenameSettingsForm = (
           }
     )
     settingsDispatch({ type: 'setDirectory', payload: directory })
+  }, [])
+
+  const setDirectory2 = useCallback((directory: string) => {
+    // Empty string is allowed (means "no folder B, fall back to folder A")
+    if (directory !== '') {
+      const invalidReason = FilenameSetting.validateDirectory(directory)
+      const isValid = invalidReason === undefined
+      formStatusDispatch({
+        type: isValid ? 'directory2IsValid' : 'directory2IsInvalid',
+      })
+      if (!isValid) {
+        settingsDispatch({ type: 'setDirectory2', payload: directory })
+        formStatusDispatch({ type: 'formIsChanged' })
+        return
+      }
+    } else {
+      formStatusDispatch({ type: 'directory2IsValid' })
+    }
+    formStatusDispatch({ type: 'formIsChanged' })
+    settingsDispatch({ type: 'setDirectory2', payload: directory })
   }, [])
 
   const toggleSubDirectory = useCallback(() => {
@@ -340,6 +386,7 @@ const useFilenameSettingsForm = (
       submit,
       reset,
       setDirectory,
+      setDirectory2,
       toggleSubDirectory,
       changePatternTokenState,
       sortPatternToken,

@@ -25,6 +25,15 @@ jest.mock(
 `
 )
 
+jest.mock(
+  '#assets/icons/twitter-download-b.svg',
+  () =>
+    `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+	<path d="M20,6h-8l-2-2H4C2.9,4,2,4.9,2,6v12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V8C22,6.9,21.1,6,20,6z M16,14.5l-4,4l-4-4h3V10h2v4.5H16z"/>
+</svg>
+`
+)
+
 describe.each([
   {
     context: 'timeline',
@@ -124,7 +133,9 @@ describe.each([
 
     expect(result).toBe('ok')
 
-    const harvesterButton = screen.queryByTestId('harvester-button')
-    expect(harvesterButton).toBeInTheDocument()
+    const harvesterButtonA = screen.queryByTestId('harvester-button-a')
+    const harvesterButtonB = screen.queryByTestId('harvester-button-b')
+    expect(harvesterButtonA).toBeInTheDocument()
+    expect(harvesterButtonB).toBeInTheDocument()
   })
 })
