@@ -36,7 +36,6 @@ const mediaFromTweetToTweetMediaFile = (
 
   return tweetMedia => {
     const pathInfo = mediaToParsedPath(tweetMedia)
-    const isGif = tweetMedia.mapBy(props => props.type === 'animated_gif')
     return new TweetMediaFile({
       tweetId: tweetId,
       createdAt: createdAt,
@@ -44,7 +43,7 @@ const mediaFromTweetToTweetMediaFile = (
       type: mediaToTweetMediaType(tweetMedia),
       source: tweetMedia.getVariantUrl('orig'),
       serial: mediaToSerial(tweetMedia),
-      ext: isGif ? '.gif' : pathInfo.ext,
+      ext: pathInfo.ext,
       hash: pathInfo.name,
     })
   }

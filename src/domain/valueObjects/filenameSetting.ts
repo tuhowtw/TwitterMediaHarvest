@@ -135,11 +135,13 @@ export class FilenameSetting extends ValueObject<FilenameSettingProps> {
       .replace(PatternToken.TweetTimestamp, createdAt.getTime().toString())
       .replace(PatternToken.Timestamp, currentDate.getTime().toString())
 
+    const gifPrefix = mediaFile.isGif ? '[gif]' : ''
+
     return path.format({
       dir: options?.noDir
         ? undefined
         : this.makeAggregationDirectory(mediaFile, directoryOverride),
-      name: filename,
+      name: gifPrefix + filename,
       ext: mediaFile.mapBy(props => props.ext),
     })
   }

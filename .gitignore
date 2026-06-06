@@ -98,3 +98,9 @@ bdd-gen/
 !.yarn/sdks
 !.yarn/versions
 desktop.ini
+
+# Signing credentials — never commit
+.env.signing.local
+
+# Signed extension artifacts
+web-ext-artifacts/

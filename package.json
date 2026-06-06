@@ -1,6 +1,6 @@
 {
   "name": "twitter-media-harvest",
-  "version": "4.5.4.4",
+  "version": "4.5.4.5",
   "type": "module",
   "description": "The easiest way to get media from twitter-timeline.",
   "engines": {
@@ -23,11 +23,9 @@
     "@smithy/signature-v4": "^5.3.12",
     "fp-ts": "^2.16.11",
     "framer-motion": "^12.38.0",
-    "gifenc": "^1.0.3",
     "idb": "^8.0.3",
     "joi": "^18.1.2",
     "jwt-decode": "^4.0.0",
-    "mp4box": "^2.3.0",
     "path-browserify": "^1.0.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
@@ -145,6 +143,7 @@
     "build:edge:all": "webpack --mode=production --progress --color --env target=edge --env zip=true",
     "build:edge:all:dev": "webpack --mode=development --progress --color --env target=edge",
     "build:firefox:all": "webpack --mode=production --progress --color --env target=firefox --env zip=true",
+    "sign:firefox": "node ./utils/sign-firefox-local.mjs",
     "build:firefox:all:dev": "webpack --mode=development --progress --color --env target=firefox",
     "build:firefox:all:self-sign": "webpack --mode=production --progress --color --env target=firefox --env self-sign --env zip=true",
     "build:chrome:service": "webpack --mode=production --progress --color --env target=chrome --config-name=service",

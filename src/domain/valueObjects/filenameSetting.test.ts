@@ -1,3 +1,4 @@
+import { TweetMediaFile } from '#domain/valueObjects/tweetMediaFile'
 import PatternToken from '#enums/patternToken'
 import { generateTweetMediaFile } from '#utils/test/tweetMediaFile'
 import { AggregationToken, FilenameSetting } from './filenameSetting'
@@ -179,6 +180,30 @@ describe('unit test for filename settings', () => {
     expect(filename).toBe(
       `${screenName}-${tweetId}-${String(serial).padStart(2, '0')}${ext}`
     )
+  })
+
+  it('prepends [gif] prefix for animated_gif media', () => {
+    const gifFile = new TweetMediaFile({
+      type: 'animated_gif',
+      createdAt: new Date(2222, 2, 2),
+      ext: '.mp4',
+      hash: 'gifhash',
+      source: 'https://video.twimg.com/tweet_video/gifhash.mp4',
+      tweetId: '99999',
+      serial: 1,
+      tweetUser: mediaFile.mapBy(props => props.tweetUser),
+    })
+    const filenameSetting = new FilenameSetting({
+      ...baseSettings,
+      filenamePattern: [
+        PatternToken.Account,
+        PatternToken.TweetId,
+        PatternToken.Serial,
+      ],
+    })
+    const filename = filenameSetting.makeFilename(gifFile)
+    expect(filename).toContain('[gif]')
+    expect(filename).toMatch(/\[gif\].+\.mp4$/)
   })
 
   it('should handle empty filename pattern', () => {
