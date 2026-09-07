@@ -11,6 +11,7 @@ const defaultFeature: FeatureSettings = {
   autoRevealNsfw: false,
   includeVideoThumbnail: false,
   keyboardShortcut: true,
+  removeBookmarkAfterDownload: true,
 }
 
 export class FeatureSettingsRepository implements ISettingsRepository<FeatureSettings> {

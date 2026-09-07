@@ -8,6 +8,7 @@ export class MockFeatureSettingsRepository implements ISettingsRepository<Featur
       autoRevealNsfw: false,
       includeVideoThumbnail: false,
       keyboardShortcut: true,
+      removeBookmarkAfterDownload: true,
     }
   }
   async get(): Promise<FeatureSettings> {
@@ -24,6 +25,7 @@ export class MockFeatureSettingsRepository implements ISettingsRepository<Featur
       autoRevealNsfw: false,
       includeVideoThumbnail: false,
       keyboardShortcut: true,
+      removeBookmarkAfterDownload: true,
     }
   }
 }

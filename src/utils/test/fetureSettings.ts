@@ -5,4 +5,5 @@ export const generateFeatureSettings = (): FeatureSettings => ({
   autoRevealNsfw: faker.datatype.boolean(),
   includeVideoThumbnail: faker.datatype.boolean(),
   keyboardShortcut: faker.datatype.boolean(),
+  removeBookmarkAfterDownload: faker.datatype.boolean(),
 })

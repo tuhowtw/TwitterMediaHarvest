@@ -24,6 +24,7 @@ describe('unit test for useFeatureSettings hook', () => {
       await toggler.nsfw()
       await toggler.keyboardShortcut()
       await toggler.thumbnail()
+      await toggler.removeBookmark()
     })
 
     const [settings] = result.current
@@ -31,6 +32,9 @@ describe('unit test for useFeatureSettings hook', () => {
     expect(settings.keyboardShortcut).toBe(!originalSettings.keyboardShortcut)
     expect(settings.includeVideoThumbnail).toBe(
       !originalSettings.includeVideoThumbnail
+    )
+    expect(settings.removeBookmarkAfterDownload).toBe(
+      !originalSettings.removeBookmarkAfterDownload
     )
   })
 })

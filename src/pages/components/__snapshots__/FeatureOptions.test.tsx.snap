@@ -215,6 +215,70 @@ exports[`unit test for FeatureOptions component can render properly 1`] = `
         </div>
       </label>
     </div>
+    <div
+      class="chakra-form-control css-0"
+      data-testid="removeBookmark-feature-switch"
+      label="Translated<options:features_Remove bookmark after download>"
+      role="group"
+    >
+      <label
+        class="chakra-form__label css-28a6i0"
+        data-testid="feature-switch-label"
+        for="_r_6_"
+        id="field-_r_7_-label"
+      >
+        <div
+          class="chakra-stack css-mz2o5n"
+          style="transition: background 300ms;"
+        >
+          <div
+            class="chakra-stack css-1bef4uc"
+          >
+            <p
+              class="chakra-text css-1tbqbam"
+            >
+              Translated&lt;options:features_Remove bookmark after download&gt;
+            </p>
+            <p
+              class="chakra-text css-qljqz"
+            >
+              Translated&lt;options:features_When the post is bookmarked, remove it from your Bookmarks after the download succeeds.&gt;
+            </p>
+             
+          </div>
+          <div
+            class="css-fzqoy4"
+          >
+            <label
+              class="chakra-switch css-16pgy8f"
+              data-checked=""
+              data-testid="feature-switch"
+            >
+              <input
+                aria-checked="true"
+                aria-disabled="false"
+                aria-invalid="false"
+                checked=""
+                class="chakra-switch__input"
+                id="_r_6_"
+                style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; width: 1px; margin: -1px; padding: 0px; overflow: hidden; white-space: nowrap; position: absolute;"
+                type="checkbox"
+              />
+              <span
+                aria-hidden="true"
+                class="chakra-switch__track css-14qxnv8"
+                data-checked=""
+              >
+                <span
+                  class="chakra-switch__thumb css-0"
+                  data-checked=""
+                />
+              </span>
+            </label>
+          </div>
+        </div>
+      </label>
+    </div>
   </div>
 </div>
 `;

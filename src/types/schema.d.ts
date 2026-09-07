@@ -32,6 +32,7 @@ type FeatureSettings = {
   autoRevealNsfw: boolean
   includeVideoThumbnail: boolean
   keyboardShortcut: boolean
+  removeBookmarkAfterDownload: boolean
 }
 
 type AggregationToken = '{account}'

@@ -66,6 +66,16 @@ const FeatureOptions = ({ featureSettingsRepo }: FeatureOptionsProps) => {
         handleClick={toggler.thumbnail}
         testId="videoThumbnail-feature-switch"
       />
+      <RichFeatureSwitch
+        name={i18n('Remove bookmark after download', 'options:features')}
+        desc={i18n(
+          'When the post is bookmarked, remove it from your Bookmarks after the download succeeds.',
+          'options:features'
+        )}
+        isOn={featureSettings.removeBookmarkAfterDownload}
+        handleClick={toggler.removeBookmark}
+        testId="removeBookmark-feature-switch"
+      />
     </VStack>
   )
 }

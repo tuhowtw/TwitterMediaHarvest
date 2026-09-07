@@ -3,12 +3,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
+import { FeatureSettingsRepository } from '#infra/repositories/featureSettings'
+import { LocalExtensionStorageProxy } from '#infra/storageProxy'
 import {
   CheckDownloadHistoryMessage,
   DownloadTweetMediaMessage,
   sendMessage,
 } from '#libs/webExtMessage'
 import { getTweetInfoFromArticleChildElement } from './article'
+import { removeBookmarkFromHarvesterButton } from './bookmark'
 
 type ButtonElement = HTMLElement
 
@@ -41,6 +44,21 @@ const isDownloadingButton = (button: ButtonElement) =>
 const responseStatusToButtonStatus = (respStatus: 'ok' | 'error') =>
   respStatus === 'ok' ? ButtonStatus.Success : ButtonStatus.Error
 
+const featureSettingsRepo = new FeatureSettingsRepository(
+  new LocalExtensionStorageProxy()
+)
+
+const removeBookmarkIfEnabled = (button: ButtonElement) => {
+  featureSettingsRepo
+    .get()
+    .then(({ removeBookmarkAfterDownload }) => {
+      if (removeBookmarkAfterDownload) removeBookmarkFromHarvesterButton(button)
+    })
+    .catch(() => {
+      // Best-effort: a failure here shouldn't affect the download result.
+    })
+}
+
 const buttonClickHandler = (e: MouseEvent) => {
   e.stopImmediatePropagation()
   const target = e.target
@@ -63,9 +81,10 @@ const buttonClickHandler = (e: MouseEvent) => {
     folder,
   })
   sendMessage(message)
-    .then(resp =>
+    .then(resp => {
       setButtonStatus(responseStatusToButtonStatus(resp.status))(button)
-    )
+      if (resp.status === 'ok') removeBookmarkIfEnabled(button)
+    })
     .catch(() => setButtonStatus(ButtonStatus.Error)(button))
 }
 

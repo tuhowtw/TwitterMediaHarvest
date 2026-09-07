@@ -11,7 +11,12 @@ import { useCallback, useEffect, useReducer } from 'react'
 function reducer(
   settings: FeatureSettings,
   action:
-    | PureAction<'toggleNsfw' | 'toggleThumbnail' | 'toggleKeyboardShortcut'>
+    | PureAction<
+        | 'toggleNsfw'
+        | 'toggleThumbnail'
+        | 'toggleKeyboardShortcut'
+        | 'toggleRemoveBookmark'
+      >
     | InitPayloadAction<FeatureSettings>
 ): FeatureSettings {
   switch (action.type) {
@@ -30,13 +35,19 @@ function reducer(
         keyboardShortcut: !settings.keyboardShortcut,
       }
 
+    case 'toggleRemoveBookmark':
+      return {
+        ...settings,
+        removeBookmarkAfterDownload: !settings.removeBookmarkAfterDownload,
+      }
+
     case 'init':
       return action.payload
   }
 }
 
 type Toggler = Record<
-  'nsfw' | 'thumbnail' | 'keyboardShortcut',
+  'nsfw' | 'thumbnail' | 'keyboardShortcut' | 'removeBookmark',
   () => Promise<void>
 >
 
@@ -78,12 +89,20 @@ const useFeatureSettings = (
     dispatch({ type: 'toggleKeyboardShortcut' })
   }, [featureSettings.keyboardShortcut, featureSettingsRepo])
 
+  const toggleRemoveBookmark = useCallback(async () => {
+    await featureSettingsRepo.save({
+      removeBookmarkAfterDownload: !featureSettings.removeBookmarkAfterDownload,
+    })
+    dispatch({ type: 'toggleRemoveBookmark' })
+  }, [featureSettings.removeBookmarkAfterDownload, featureSettingsRepo])
+
   return [
     featureSettings,
     {
       nsfw: toggleRevealNsfw,
       thumbnail: toggleThumbnail,
       keyboardShortcut: toggleKeyboardShortcut,
+      removeBookmark: toggleRemoveBookmark,
     },
   ]
 }
