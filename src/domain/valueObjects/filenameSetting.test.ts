@@ -182,9 +182,9 @@ describe('unit test for filename settings', () => {
     )
   })
 
-  it('prepends [gif] prefix for animated_gif media', () => {
+  it('prepends gif- prefix for animated gif media (detected via tweet_video url)', () => {
     const gifFile = new TweetMediaFile({
-      type: 'animated_gif',
+      type: 'video',
       createdAt: new Date(2222, 2, 2),
       ext: '.mp4',
       hash: 'gifhash',
@@ -202,8 +202,8 @@ describe('unit test for filename settings', () => {
       ],
     })
     const filename = filenameSetting.makeFilename(gifFile)
-    expect(filename).toContain('[gif]')
-    expect(filename).toMatch(/\[gif\].+\.mp4$/)
+    expect(filename).toContain('gif-')
+    expect(filename).toMatch(/gif-.+\.mp4$/)
   })
 
   it('should handle empty filename pattern', () => {

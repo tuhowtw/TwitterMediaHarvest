@@ -135,7 +135,7 @@ export class FilenameSetting extends ValueObject<FilenameSettingProps> {
       .replace(PatternToken.TweetTimestamp, createdAt.getTime().toString())
       .replace(PatternToken.Timestamp, currentDate.getTime().toString())
 
-    const gifPrefix = mediaFile.isGif ? '[gif]' : ''
+    const gifPrefix = mediaFile.isGif ? 'gif-' : ''
 
     return path.format({
       dir: options?.noDir

@@ -62,9 +62,11 @@ const buttonClickHandler = (e: MouseEvent) => {
     ...value.mapBy(props => props),
     folder,
   })
-  sendMessage(message).then(resp =>
-    setButtonStatus(responseStatusToButtonStatus(resp.status))(button)
-  )
+  sendMessage(message)
+    .then(resp =>
+      setButtonStatus(responseStatusToButtonStatus(resp.status))(button)
+    )
+    .catch(() => setButtonStatus(ButtonStatus.Error)(button))
 }
 
 export const makeButtonListener = <T extends ButtonElement>(button: T): T => {

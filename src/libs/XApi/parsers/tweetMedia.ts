@@ -48,7 +48,7 @@ export const parseMedias = (medias: XApi.Media[]): MediaCollection => {
         mediaCollection.videos.push(
           new TweetMedia({
             index: videoIndex,
-            type: media.type === 'animated_gif' ? 'animated_gif' : 'video',
+            type: 'video',
             url: url,
             available: videoAvailable,
           })
@@ -61,12 +61,13 @@ export const parseMedias = (medias: XApi.Media[]): MediaCollection => {
   }, makeEmptyMediaCollection())
 }
 
-const parseBestVideoVariant = (media: XApi.VideoMedia): string | undefined =>
-  media.video_info.variants
-    .filter(isMp4)
-    .reduce((prevVariant, currVariant) =>
-      currVariant?.bitrate >= prevVariant?.bitrate ? currVariant : prevVariant
-    ).url
+const parseBestVideoVariant = (media: XApi.VideoMedia): string | undefined => {
+  const mp4Variants = media.video_info.variants.filter(isMp4)
+  if (mp4Variants.length === 0) return undefined
+  return mp4Variants.reduce((prev, curr) =>
+    (curr?.bitrate ?? 0) >= (prev?.bitrate ?? 0) ? curr : prev
+  ).url
+}
 
 const isVideoMedia = (media: XApi.Media): media is XApi.VideoMedia =>
   media.type === 'animated_gif' || media.type === 'video'

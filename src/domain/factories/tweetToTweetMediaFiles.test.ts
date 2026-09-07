@@ -165,7 +165,7 @@ describe('unit test for tweet to tweet media files factory', () => {
     expect(tweetMediaFiles).toStrictEqual(expectedFiles)
   })
 
-  it('sets ext to .mp4 (not .gif) for animated_gif media', () => {
+  it('sets ext to .mp4 for animated gif media and isGif detected via tweet_video url', () => {
     const tweetUser = generateTweetUser()
     const tweet = new Tweet({
       id: '1145141919810',
@@ -182,15 +182,15 @@ describe('unit test for tweet to tweet media files factory', () => {
       videos: [
         new TweetMedia({
           index: 0,
-          type: 'animated_gif',
+          type: 'video',
           url: 'https://video.twimg.com/tweet_video/hash.mp4',
         }),
       ],
     })
 
     const mediaFiles = tweetToTweetMediaFiles(tweet)
-    const gifFile = mediaFiles.find(
-      f => f.mapBy(props => props.type) === 'animated_gif'
+    const gifFile = mediaFiles.find(f =>
+      f.mapBy(props => props.source).includes('/tweet_video/')
     )
 
     expect(gifFile).toBeDefined()

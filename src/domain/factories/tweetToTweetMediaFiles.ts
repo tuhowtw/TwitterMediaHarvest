@@ -63,9 +63,6 @@ const mediaToTweetMediaType: Factory<
 
       case 'video':
         return 'video'
-
-      case 'animated_gif':
-        return 'animated_gif'
     }
   })
 

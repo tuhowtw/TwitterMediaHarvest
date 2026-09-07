@@ -6,7 +6,7 @@
 import { ValueObject } from './base'
 
 export type TweetMediaProps = {
-  type: 'photo' | 'thumbnail' | 'video' | 'animated_gif'
+  type: 'photo' | 'thumbnail' | 'video'
   index: number
   url: string
   available?: boolean
@@ -18,11 +18,7 @@ export class TweetMedia extends ValueObject<TweetMediaProps> {
   }
 
   get isVideo() {
-    return this.props.type === 'video' || this.props.type === 'animated_gif'
-  }
-
-  get isGif() {
-    return this.props.type === 'animated_gif'
+    return this.props.type === 'video'
   }
 
   get isThumbnail() {

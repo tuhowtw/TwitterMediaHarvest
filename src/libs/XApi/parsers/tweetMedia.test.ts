@@ -1,7 +1,7 @@
 import { parseMedias } from './tweetMedia'
 
 describe('parseMedias animated_gif handling', () => {
-  it('preserves animated_gif type in parsed videos', () => {
+  it('parses animated_gif as type video with tweet_video mp4 url', () => {
     const medias = [
       {
         type: 'animated_gif',
@@ -21,9 +21,11 @@ describe('parseMedias animated_gif handling', () => {
     const result = parseMedias(medias)
 
     expect(result.videos).toHaveLength(1)
-    expect(result.videos[0].mapBy(p => p.type)).toBe('animated_gif')
-    expect(result.videos[0].isGif).toBe(true)
+    expect(result.videos[0].mapBy(p => p.type)).toBe('video')
     expect(result.videos[0].isVideo).toBe(true)
+    expect(result.videos[0].mapBy(p => p.url)).toBe(
+      'https://video.twimg.com/tweet_video/hash.mp4'
+    )
   })
 })
 

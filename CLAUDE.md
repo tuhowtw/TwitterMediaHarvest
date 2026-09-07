@@ -34,9 +34,9 @@ Version in `package.json` must be bumped each AMO upload.
 
 - Twitter stores animated GIFs as mp4 files (video.twimg.com/tweet_video/\*.mp4).
 - The X API media.type field distinguishes: 'animated_gif' vs 'video'.
-- Upstream collapses both to type:'video' in src/libs/XApi/parsers/tweetMedia.ts (isVideoMedia).
-- This fork preserves 'animated_gif' through the parser and domain model (tweetMedia.ts, tweetMediaFile.ts) but does NOT transcode. GIFs download as .mp4 with a [gif] filename prefix so they're identifiable in download lists.
-- Filename example: [gif]elonmusk-1234567890-01.mp4
+- Upstream collapses both to type:'video' in src/libs/XApi/parsers/tweetMedia.ts (isVideoMedia), and this fork does the same — no 'animated_gif' type in the domain model anymore.
+- Instead, TweetMediaFile.isGif detects GIFs by source URL (source.includes('/tweet_video/')). No transcoding. GIFs download as .mp4 with a gif- filename prefix so they're identifiable in download lists.
+- Filename example: gif-elonmusk-1234567890-01.mp4
 
 ### Single folder / button (upstream)
 
